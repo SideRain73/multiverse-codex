@@ -139,26 +139,40 @@ const App = {
   async login() {
     const user = document.getElementById('loginUser').value.trim();
     const pw   = document.getElementById('loginPass').value;
-    const err  = document.getElementById('loginError');
 
     if (!user || !pw) { App.showLoginError('Please enter username and password.'); return; }
+
+    // Test Supabase connection first
+    if (USE_SUPABASE) {
+      try {
+        const { error } = await _supabase.from('kv').select('key').limit(1);
+        if (error) { App.showLoginError('Database error: ' + error.message); return; }
+      } catch (e) {
+        App.showLoginError('Cannot connect to database. Check your internet connection.'); return;
+      }
+    }
 
     // Load credentials from DB
     const storedHash = await DB.get('kv', 'editorHash');
     const storedUser = await DB.get('kv', 'editorUser');
 
-    // First-time setup: no credentials yet → create them
+    // First-time setup: no credentials yet → create them and verify the write worked
     if (!storedHash) {
       const hash = await hashPassword(pw);
       await DB.put('kv', user, 'editorUser');
       await DB.put('kv', hash, 'editorHash');
+
+      // Verify write actually succeeded
+      const verify = await DB.get('kv', 'editorHash');
+      if (!verify) { App.showLoginError('Failed to save credentials. Check database permissions.'); return; }
+
       State.isEditor = true; State.isViewer = true;
       sessionStorage.setItem('codex_role', 'editor');
       await App.enterApp();
       return;
     }
 
-    // Validate
+    // Validate credentials
     if (user !== storedUser) { App.showLoginError('Invalid username or password.'); return; }
     const hash = await hashPassword(pw);
     if (hash !== storedHash) { App.showLoginError('Invalid username or password.'); return; }
