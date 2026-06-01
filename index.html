@@ -70,6 +70,37 @@
       <div id="dashboardCards" class="dashboard-grid"></div>
     </div>
 
+    <!-- Section View -->
+    <div id="sectionView" class="view hidden">
+      <div class="page-header">
+        <div class="page-header-row">
+          <h1 id="sectionTitle" class="page-title cinzel"></h1>
+          <div id="sectionActions" class="page-actions editor-only hidden">
+            <button class="btn-primary" onclick="App.newItem()">＋ New</button>
+            <button class="btn-secondary" onclick="App.renameSection()">✎ Rename</button>
+            <button class="btn-danger" onclick="App.deleteSection()">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+      <div id="sectionCards" class="section-grid"></div>
+    </div>
+
+    <!-- Subcategory View -->
+    <div id="subcategoryView" class="view hidden">
+      <div class="page-header">
+        <div class="breadcrumb" id="subcategoryBreadcrumb"></div>
+        <div class="page-header-row">
+          <h1 id="subcategoryTitle" class="page-title cinzel"></h1>
+          <div id="subcategoryActions" class="page-actions editor-only hidden">
+            <button class="btn-primary" onclick="App.newPage()">＋ New Page</button>
+            <button class="btn-secondary" onclick="App.renameSubcategory()">✎ Rename</button>
+            <button class="btn-danger" onclick="App.deleteSubcategory()">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+      <div id="subcategoryCards" class="section-grid"></div>
+    </div>
+
     <!-- Page View -->
     <div id="pageView" class="view hidden">
       <div class="page-header">
@@ -118,21 +149,6 @@
       <div id="pageBody" class="page-body" contenteditable="false"></div>
     </div>
 
-    <!-- Section View -->
-    <div id="sectionView" class="view hidden">
-      <div class="page-header">
-        <div class="page-header-row">
-          <h1 id="sectionTitle" class="page-title cinzel"></h1>
-          <div id="sectionActions" class="page-actions editor-only hidden">
-            <button class="btn-primary" onclick="App.newPage()">＋ New Page</button>
-            <button class="btn-secondary" onclick="App.renameSection()">✎ Rename</button>
-            <button class="btn-danger" onclick="App.deleteSection()">🗑 Delete Section</button>
-          </div>
-        </div>
-      </div>
-      <div id="sectionCards" class="section-grid"></div>
-    </div>
-
   </main>
 </div>
 
@@ -141,7 +157,7 @@
   <div class="modal" onclick="event.stopPropagation()">
     <h2 id="modalTitle" class="cinzel"></h2>
     <div id="modalBody"></div>
-    <div class="modal-actions">
+    <div class="modal-actions" id="modalActions">
       <button id="modalConfirm" class="btn-primary" onclick="App.modalConfirm()">Confirm</button>
       <button class="btn-secondary" onclick="App.closeModal()">Cancel</button>
     </div>
