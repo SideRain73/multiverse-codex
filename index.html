@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Multiverse Codex</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-emblem">⚔</div>
+    <h1 class="login-title">The Multiverse Codex</h1>
+    <p class="login-sub">Enter your credentials to access the archives</p>
+    <div id="loginError" class="login-error hidden"></div>
+    <input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
+    <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
+    <button onclick="App.login()">Enter the Codex</button>
+    <p class="login-readonly-hint">Or <a href="#" onclick="App.viewOnly(); return false;">browse as a reader</a> (no editing)</p>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="appShell" class="app-shell hidden">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-emblem">⚔</span>
+      <span class="sidebar-title">Multiverse Codex</span>
+    </div>
+
+    <nav id="sectionNav" class="section-nav"></nav>
+
+    <div id="editorTools" class="sidebar-footer editor-only hidden">
+      <button class="btn-ghost" onclick="App.newSection()">＋ New Section</button>
+      <button class="btn-ghost" onclick="App.showSettings()">⚙ Settings</button>
+      <button class="btn-ghost" onclick="App.exportData()">↓ Export</button>
+      <button class="btn-ghost" onclick="App.importData()">↑ Import</button>
+      <button class="btn-ghost btn-logout" onclick="App.logout()">⇦ Logout</button>
+    </div>
+    <div id="readerTools" class="sidebar-footer reader-only hidden">
+      <button class="btn-ghost btn-logout" onclick="App.logout()">⇦ Exit</button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main id="mainContent" class="main-content">
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="view">
+      <div class="page-header">
+        <h1 class="page-title cinzel">The Multiverse Codex</h1>
+        <p class="page-desc">Your complete archive for the D&D multiverse campaign.</p>
+      </div>
+      <div id="dashboardCards" class="dashboard-grid"></div>
+    </div>
+
+    <!-- Page View -->
+    <div id="pageView" class="view hidden">
+      <div class="page-header">
+        <div class="breadcrumb" id="breadcrumb"></div>
+        <div class="page-header-row">
+          <h1 id="pageTitle" class="page-title cinzel" contenteditable="false"></h1>
+          <div id="pageActions" class="page-actions editor-only hidden">
+            <button class="btn-primary" id="editBtn" onclick="App.startEdit()">✎ Edit</button>
+            <button class="btn-primary hidden" id="saveBtn" onclick="App.savePage()">✔ Save</button>
+            <button class="btn-secondary hidden" id="cancelBtn" onclick="App.cancelEdit()">✖ Cancel</button>
+            <button class="btn-danger" id="deletePageBtn" onclick="App.deletePage()">🗑 Delete Page</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor toolbar -->
+      <div id="editorToolbar" class="editor-toolbar hidden">
+        <button onclick="fmt('bold')" title="Bold"><b>B</b></button>
+        <button onclick="fmt('italic')" title="Italic"><i>I</i></button>
+        <button onclick="fmt('underline')" title="Underline"><u>U</u></button>
+        <button onclick="fmt('strikeThrough')" title="Strikethrough"><s>S</s></button>
+        <span class="sep">|</span>
+        <button onclick="fmtBlock('h2')" title="Heading 2">H2</button>
+        <button onclick="fmtBlock('h3')" title="Heading 3">H3</button>
+        <button onclick="fmtBlock('p')" title="Paragraph">¶</button>
+        <span class="sep">|</span>
+        <button onclick="fmt('insertUnorderedList')" title="Bullet list">•</button>
+        <button onclick="fmt('insertOrderedList')" title="Numbered list">1.</button>
+        <span class="sep">|</span>
+        <button onclick="insertTable()" title="Insert table">⊞ Table</button>
+        <button onclick="insertDivider()" title="Divider">—</button>
+        <span class="sep">|</span>
+        <select onchange="fmtColor(this.value); this.value=''" title="Text color">
+          <option value="">Color</option>
+          <option value="#e8c84a">Gold</option>
+          <option value="#c97c3a">Copper</option>
+          <option value="#8ca8e8">Arcane Blue</option>
+          <option value="#b06cb0">Mystic Purple</option>
+          <option value="#7acc7a">Nature Green</option>
+          <option value="#e07070">Blood Red</option>
+          <option value="#cccccc">Silver</option>
+          <option value="#f0e6d0">Parchment</option>
+        </select>
+      </div>
+
+      <div id="pageBody" class="page-body" contenteditable="false"></div>
+    </div>
+
+    <!-- Section View -->
+    <div id="sectionView" class="view hidden">
+      <div class="page-header">
+        <div class="page-header-row">
+          <h1 id="sectionTitle" class="page-title cinzel"></h1>
+          <div id="sectionActions" class="page-actions editor-only hidden">
+            <button class="btn-primary" onclick="App.newPage()">＋ New Page</button>
+            <button class="btn-secondary" onclick="App.renameSection()">✎ Rename</button>
+            <button class="btn-danger" onclick="App.deleteSection()">🗑 Delete Section</button>
+          </div>
+        </div>
+      </div>
+      <div id="sectionCards" class="section-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div id="modalOverlay" class="modal-overlay hidden" onclick="App.closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2 id="modalTitle" class="cinzel"></h2>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button id="modalConfirm" class="btn-primary" onclick="App.modalConfirm()">Confirm</button>
+      <button class="btn-secondary" onclick="App.closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden import input -->
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="App.handleImport(event)" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
