@@ -237,7 +237,7 @@ const App = {
         const pg = document.createElement('div');
         pg.className = 'nav-page' + (State.currentPageId === p.id ? ' active' : '');
         pg.textContent = p.title;
-        pg.onclick = (e) => { e.stopPropagation(); App.openPage(p.id); };
+        pg.onclick = (e) => { e.stopPropagation(); App.openPage(p.id); App.closeSidebar(); };
         pagesDiv.appendChild(pg);
       }
 
@@ -260,6 +260,21 @@ const App = {
     State.currentPageId = null;
     await App.renderNav();
     await App.showSection(id);
+    App.closeSidebar();
+  },
+
+  // ── Mobile sidebar ──────────────────────────────────────────────────
+  toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const isOpen  = sidebar.classList.contains('open');
+    sidebar.classList.toggle('open', !isOpen);
+    overlay.classList.toggle('active', !isOpen);
+  },
+
+  closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
   },
 
   // ── Views ───────────────────────────────────────────────────────────

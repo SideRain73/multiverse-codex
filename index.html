@@ -27,11 +27,21 @@
 <!-- ===== MAIN APP ===== -->
 <div id="appShell" class="app-shell hidden">
 
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" onclick="App.toggleSidebar()" aria-label="Menu">☰</button>
+    <span class="mobile-title cinzel">Multiverse Codex</span>
+  </div>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="App.closeSidebar()"></div>
+
   <!-- Sidebar -->
   <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-header" onclick="App.showDashboard(); App.closeSidebar()">
       <span class="sidebar-emblem">⚔</span>
       <span class="sidebar-title">Multiverse Codex</span>
+      <button class="sidebar-close" onclick="event.stopPropagation(); App.closeSidebar()">✕</button>
     </div>
 
     <nav id="sectionNav" class="section-nav"></nav>
