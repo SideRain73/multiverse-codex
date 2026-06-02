@@ -44,6 +44,11 @@
       <button class="sidebar-close" onclick="event.stopPropagation(); App.closeSidebar()">✕</button>
     </div>
 
+    <div class="sidebar-search">
+      <input type="text" id="searchInput" placeholder="🔍 Cerca..." oninput="App.handleSearch(this.value)" autocomplete="off" />
+      <button class="search-clear hidden" id="searchClear" onclick="App.clearSearch()">✕</button>
+    </div>
+
     <nav id="sectionNav" class="section-nav"></nav>
 
     <div id="editorTools" class="sidebar-footer editor-only hidden">
@@ -92,7 +97,7 @@
         <div class="page-header-row">
           <h1 id="subcategoryTitle" class="page-title cinzel"></h1>
           <div id="subcategoryActions" class="page-actions editor-only hidden">
-            <button class="btn-primary" onclick="App.newPage()">＋ New Page</button>
+            <button class="btn-primary" onclick="App.newItem()">＋ New</button>
             <button class="btn-secondary" onclick="App.renameSubcategory()">✎ Rename</button>
             <button class="btn-danger" onclick="App.deleteSubcategory()">🗑 Delete</button>
           </div>

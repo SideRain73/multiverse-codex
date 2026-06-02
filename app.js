@@ -1,6 +1,6 @@
 /* =====================================================================
    THE MULTIVERSE CODEX — app.js
-   Structure: Section → Subcategory (optional) → Pages
+   Structure: Section → Subcategory (nested, unlimited) → Pages
    Data stored in Supabase (config.js) or IndexedDB fallback.
    ===================================================================== */
 
@@ -119,6 +119,29 @@ const State = {
   modalCallback: null,
 };
 
+// ── Subcategory tree helpers ──────────────────────────────────────────
+
+// Returns ordered ancestor chain [root, ..., direct parent] for a subcategory id
+async function getSubcategoryAncestors(scId) {
+  const chain = [];
+  let current = scId;
+  while (current) {
+    const sc = await DB.get('subcategories', current);
+    if (!sc) break;
+    chain.unshift(sc);
+    current = sc.parentId || null;
+  }
+  return chain; // includes the sc itself as last element
+}
+
+// Recursively collect all descendant subcategory ids (not including scId itself)
+function collectDescendantIds(scId, allSubs) {
+  const children = allSubs.filter(s => s.parentId === scId);
+  let ids = children.map(s => s.id);
+  for (const c of children) ids = ids.concat(collectDescendantIds(c.id, allSubs));
+  return ids;
+}
+
 // ── App ───────────────────────────────────────────────────────────────
 const App = {
 
@@ -202,6 +225,98 @@ const App = {
     el.classList.remove('hidden');
   },
 
+  // ── Search ───────────────────────────────────────────────────────
+  async handleSearch(query) {
+    const q = query.trim().toLowerCase();
+    const clearBtn = document.getElementById('searchClear');
+    clearBtn.classList.toggle('hidden', !q);
+
+    if (!q) { await App.renderNav(); return; }
+
+    const sections      = (await DB.getAll('sections')).sort((a, b) => a.order - b.order);
+    const allSubs       = (await DB.getAll('subcategories')).sort((a, b) => a.order - b.order);
+    const allPages      = (await DB.getAll('pages')).sort((a, b) => a.order - b.order);
+
+    // Build a path string for a subcategory (e.g. "Lore › AAA › BBB")
+    function buildSubPath(sc) {
+      const chain = [];
+      let cur = sc;
+      while (cur) {
+        chain.unshift(cur.name);
+        cur = cur.parentId ? allSubs.find(s => s.id === cur.parentId) : null;
+      }
+      const sec = sections.find(s => s.id === sc.sectionId);
+      if (sec) chain.unshift(sec.icon + ' ' + sec.name);
+      return chain.join(' › ');
+    }
+
+    function highlight(text, q) {
+      const idx = text.toLowerCase().indexOf(q);
+      if (idx === -1) return text;
+      return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + q.length) + '</mark>' + text.slice(idx + q.length);
+    }
+
+    const matchingSubs  = allSubs.filter(sc => sc.name.toLowerCase().includes(q));
+    const matchingPages = allPages.filter(p  => p.title.toLowerCase().includes(q));
+
+    const nav = document.getElementById('sectionNav');
+    nav.innerHTML = '';
+
+    if (matchingSubs.length === 0 && matchingPages.length === 0) {
+      nav.innerHTML = `<div class="search-no-results">Nessun risultato per "<em>${query}</em>"</div>`;
+      return;
+    }
+
+    if (matchingSubs.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'search-results-label';
+      label.textContent = `Sottocategorie (${matchingSubs.length})`;
+      nav.appendChild(label);
+
+      for (const sc of matchingSubs) {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.innerHTML = `
+          <div class="search-result-name">${highlight(sc.icon ? sc.icon + ' ' + sc.name : sc.name, q)}</div>
+          <div class="search-result-path">${buildSubPath(sc)}</div>
+        `;
+        item.onclick = () => { App.clearSearch(); App.clickSubcategory(sc.id); };
+        nav.appendChild(item);
+      }
+    }
+
+    if (matchingPages.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'search-results-label';
+      label.textContent = `Pagine (${matchingPages.length})`;
+      nav.appendChild(label);
+
+      for (const p of matchingPages) {
+        const sec = sections.find(s => s.id === p.sectionId);
+        let path = sec ? sec.icon + ' ' + sec.name : '';
+        if (p.subcategoryId) {
+          const sc = allSubs.find(s => s.id === p.subcategoryId);
+          if (sc) path = buildSubPath(sc);
+        }
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.innerHTML = `
+          <div class="search-result-name">${highlight(p.title, q)}</div>
+          <div class="search-result-path">${path}</div>
+        `;
+        item.onclick = () => { App.clearSearch(); App.openPage(p.id); App.closeSidebar(); };
+        nav.appendChild(item);
+      }
+    }
+  },
+
+  clearSearch() {
+    const input = document.getElementById('searchInput');
+    input.value = '';
+    document.getElementById('searchClear').classList.add('hidden');
+    App.renderNav();
+  },
+
   // ── Mobile sidebar ────────────────────────────────────────────────
   toggleSidebar() {
     const s = document.getElementById('sidebar');
@@ -227,7 +342,8 @@ const App = {
 
     for (const s of sections) {
       const sOpen = State.openSections.has(s.id);
-      const sSubs = subcategories.filter(sc => sc.sectionId === s.id);
+      // Top-level subcategories: belong to this section and have no parent
+      const sTopSubs = subcategories.filter(sc => sc.sectionId === s.id && !sc.parentId);
       const sLoosePages = pages.filter(p => p.sectionId === s.id && !p.subcategoryId);
 
       const wrap = document.createElement('div');
@@ -241,34 +357,8 @@ const App = {
       const pagesWrap = document.createElement('div');
       pagesWrap.className = 'nav-section-pages' + (sOpen ? ' open' : '');
 
-      // Subcategories
-      for (const sc of sSubs) {
-        const scOpen = State.openSubcategories.has(sc.id);
-        const scPages = pages.filter(p => p.subcategoryId === sc.id);
-
-        const scWrap = document.createElement('div');
-        scWrap.className = 'nav-subcategory';
-
-        const scHeader = document.createElement('div');
-        scHeader.className = 'nav-subcategory-header' + (State.currentSubcategoryId === sc.id && !State.currentPageId ? ' active' : '');
-        scHeader.innerHTML = `<span class="nav-subcategory-icon">${sc.icon || '📁'}</span><span>${sc.name}</span><span class="nav-subcategory-arrow ${scOpen ? 'open' : ''}">▶</span>`;
-        scHeader.onclick = (e) => { e.stopPropagation(); App.clickSubcategory(sc.id); };
-
-        const scPages_wrap = document.createElement('div');
-        scPages_wrap.className = 'nav-sub-pages' + (scOpen ? ' open' : '');
-
-        for (const p of scPages) {
-          const pg = document.createElement('div');
-          pg.className = 'nav-page sub' + (State.currentPageId === p.id ? ' active' : '');
-          pg.textContent = p.title;
-          pg.onclick = (e) => { e.stopPropagation(); App.openPage(p.id); App.closeSidebar(); };
-          scPages_wrap.appendChild(pg);
-        }
-
-        scWrap.appendChild(scHeader);
-        scWrap.appendChild(scPages_wrap);
-        pagesWrap.appendChild(scWrap);
-      }
+      // Render subcategory tree recursively
+      App._renderNavSubcategoryTree(pagesWrap, sTopSubs, subcategories, pages, 0);
 
       // Loose pages (no subcategory)
       for (const p of sLoosePages) {
@@ -282,6 +372,43 @@ const App = {
       wrap.appendChild(header);
       wrap.appendChild(pagesWrap);
       nav.appendChild(wrap);
+    }
+  },
+
+  _renderNavSubcategoryTree(container, subs, allSubs, allPages, depth) {
+    for (const sc of subs) {
+      const scOpen = State.openSubcategories.has(sc.id);
+      const scPages = allPages.filter(p => p.subcategoryId === sc.id);
+      const scChildren = allSubs.filter(s => s.parentId === sc.id).sort((a, b) => a.order - b.order);
+
+      const scWrap = document.createElement('div');
+      scWrap.className = 'nav-subcategory';
+
+      const scHeader = document.createElement('div');
+      scHeader.className = 'nav-subcategory-header' + (State.currentSubcategoryId === sc.id && !State.currentPageId ? ' active' : '');
+      scHeader.style.paddingLeft = (12 + depth * 10) + 'px';
+      scHeader.innerHTML = `<span class="nav-subcategory-icon">${sc.icon || '📁'}</span><span>${sc.name}</span><span class="nav-subcategory-arrow ${scOpen ? 'open' : ''}">▶</span>`;
+      scHeader.onclick = (e) => { e.stopPropagation(); App.clickSubcategory(sc.id); };
+
+      const scContent = document.createElement('div');
+      scContent.className = 'nav-sub-pages' + (scOpen ? ' open' : '');
+
+      // Render child subcategories recursively
+      App._renderNavSubcategoryTree(scContent, scChildren, allSubs, allPages, depth + 1);
+
+      // Pages in this subcategory
+      for (const p of scPages) {
+        const pg = document.createElement('div');
+        pg.className = 'nav-page sub' + (State.currentPageId === p.id ? ' active' : '');
+        pg.style.paddingLeft = (24 + (depth + 1) * 10) + 'px';
+        pg.textContent = p.title;
+        pg.onclick = (e) => { e.stopPropagation(); App.openPage(p.id); App.closeSidebar(); };
+        scContent.appendChild(pg);
+      }
+
+      scWrap.appendChild(scHeader);
+      scWrap.appendChild(scContent);
+      container.appendChild(scWrap);
     }
   },
 
@@ -343,27 +470,28 @@ const App = {
     document.getElementById('sectionTitle').textContent = section.icon + '  ' + section.name;
     if (State.isEditor) document.getElementById('sectionActions').classList.remove('hidden');
 
-    const subcategories = (await DB.getAll('subcategories')).filter(sc => sc.sectionId === id).sort((a, b) => a.order - b.order);
-    const pages         = (await DB.getAll('pages')).filter(p => p.sectionId === id && !p.subcategoryId).sort((a, b) => a.order - b.order);
-    const allPages      = await DB.getAll('pages');
+    const allSubs = (await DB.getAll('subcategories')).sort((a, b) => a.order - b.order);
+    const topSubs = allSubs.filter(sc => sc.sectionId === id && !sc.parentId);
+    const pages   = (await DB.getAll('pages')).filter(p => p.sectionId === id && !p.subcategoryId).sort((a, b) => a.order - b.order);
+    const allPages = await DB.getAll('pages');
 
     const grid = document.getElementById('sectionCards');
     grid.innerHTML = '';
 
-    if (subcategories.length === 0 && pages.length === 0) {
+    if (topSubs.length === 0 && pages.length === 0) {
       grid.innerHTML = `<p style="color:var(--text3);font-style:italic;grid-column:1/-1">Nessun contenuto. ${State.isEditor ? 'Clicca "+ New" per aggiungere.' : ''}</p>`;
       return;
     }
 
-    // Subcategory cards
-    if (subcategories.length > 0) {
+    if (topSubs.length > 0) {
       const label = document.createElement('div');
       label.className = 'grid-label';
       label.textContent = 'Sottocategorie';
       grid.appendChild(label);
 
-      for (const sc of subcategories) {
-        const count = allPages.filter(p => p.subcategoryId === sc.id).length;
+      for (const sc of topSubs) {
+        const allDescIds = collectDescendantIds(sc.id, allSubs);
+        const count = allPages.filter(p => p.subcategoryId === sc.id || allDescIds.includes(p.subcategoryId)).length;
         const card = document.createElement('div');
         card.className = 'subcategory-card';
         card.innerHTML = `<div class="subcategory-card-icon">${sc.icon || '📁'}</div><div class="subcategory-card-info"><div class="subcategory-card-name">${sc.name}</div><div class="subcategory-card-count">${count} page${count !== 1 ? 's' : ''}</div></div>`;
@@ -372,9 +500,8 @@ const App = {
       }
     }
 
-    // Loose pages
     if (pages.length > 0) {
-      if (subcategories.length > 0) {
+      if (topSubs.length > 0) {
         const label = document.createElement('div');
         label.className = 'grid-label';
         label.textContent = 'Pagine';
@@ -397,26 +524,63 @@ const App = {
     const section = await DB.get('sections', sc.sectionId);
     App.showView('subcategoryView');
 
-    document.getElementById('subcategoryBreadcrumb').innerHTML =
-      `<span onclick="App.showDashboard()">Home</span><span class="sep">›</span><span onclick="App.clickSection('${section.id}')">${section.icon} ${section.name}</span>`;
+    // Build breadcrumb with full ancestor chain
+    const ancestors = await getSubcategoryAncestors(id);
+    let bc = `<span onclick="App.showDashboard()">Home</span><span class="sep">›</span><span onclick="App.clickSection('${section.id}')">${section.icon} ${section.name}</span>`;
+    // ancestors includes the current sc itself as the last element; show all ancestors except the current as links
+    for (let i = 0; i < ancestors.length - 1; i++) {
+      const anc = ancestors[i];
+      bc += `<span class="sep">›</span><span onclick="App.clickSubcategory('${anc.id}')">${anc.icon || '📁'} ${anc.name}</span>`;
+    }
+    document.getElementById('subcategoryBreadcrumb').innerHTML = bc;
     document.getElementById('subcategoryTitle').textContent = (sc.icon || '📁') + '  ' + sc.name;
     if (State.isEditor) document.getElementById('subcategoryActions').classList.remove('hidden');
 
-    const pages = (await DB.getAll('pages')).filter(p => p.subcategoryId === id).sort((a, b) => a.order - b.order);
+    const allSubs  = (await DB.getAll('subcategories')).sort((a, b) => a.order - b.order);
+    const childSubs = allSubs.filter(s => s.parentId === id);
+    const pages    = (await DB.getAll('pages')).filter(p => p.subcategoryId === id).sort((a, b) => a.order - b.order);
+    const allPages = await DB.getAll('pages');
+
     const grid = document.getElementById('subcategoryCards');
     grid.innerHTML = '';
 
-    if (pages.length === 0) {
-      grid.innerHTML = `<p style="color:var(--text3);font-style:italic;grid-column:1/-1">Nessuna pagina. ${State.isEditor ? 'Clicca "+ New Page" per aggiungere.' : ''}</p>`;
+    if (childSubs.length === 0 && pages.length === 0) {
+      grid.innerHTML = `<p style="color:var(--text3);font-style:italic;grid-column:1/-1">Nessun contenuto. ${State.isEditor ? 'Clicca "+ New" per aggiungere.' : ''}</p>`;
       return;
     }
-    for (const p of pages) {
-      const preview = p.body ? p.body.replace(/<[^>]+>/g, '').substring(0, 80) : 'Nessun contenuto...';
-      const card = document.createElement('div');
-      card.className = 'page-card';
-      card.innerHTML = `<div class="page-card-title">${p.title}</div><div class="page-card-preview">${preview}</div>`;
-      card.onclick = () => App.openPage(p.id);
-      grid.appendChild(card);
+
+    if (childSubs.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'grid-label';
+      label.textContent = 'Sottocategorie';
+      grid.appendChild(label);
+
+      for (const child of childSubs) {
+        const allDescIds = collectDescendantIds(child.id, allSubs);
+        const count = allPages.filter(p => p.subcategoryId === child.id || allDescIds.includes(p.subcategoryId)).length;
+        const card = document.createElement('div');
+        card.className = 'subcategory-card';
+        card.innerHTML = `<div class="subcategory-card-icon">${child.icon || '📁'}</div><div class="subcategory-card-info"><div class="subcategory-card-name">${child.name}</div><div class="subcategory-card-count">${count} page${count !== 1 ? 's' : ''}</div></div>`;
+        card.onclick = () => App.clickSubcategory(child.id);
+        grid.appendChild(card);
+      }
+    }
+
+    if (pages.length > 0) {
+      if (childSubs.length > 0) {
+        const label = document.createElement('div');
+        label.className = 'grid-label';
+        label.textContent = 'Pagine';
+        grid.appendChild(label);
+      }
+      for (const p of pages) {
+        const preview = p.body ? p.body.replace(/<[^>]+>/g, '').substring(0, 80) : 'Nessun contenuto...';
+        const card = document.createElement('div');
+        card.className = 'page-card';
+        card.innerHTML = `<div class="page-card-title">${p.title}</div><div class="page-card-preview">${preview}</div>`;
+        card.onclick = () => App.openPage(p.id);
+        grid.appendChild(card);
+      }
     }
   },
 
@@ -424,19 +588,21 @@ const App = {
     const page = await DB.get('pages', id);
     if (!page) return;
     const section = await DB.get('sections', page.sectionId);
-    const sc = page.subcategoryId ? await DB.get('subcategories', page.subcategoryId) : null;
+    const ancestors = page.subcategoryId ? await getSubcategoryAncestors(page.subcategoryId) : [];
 
     State.currentPageId = id;
     State.currentSectionId = page.sectionId;
     State.currentSubcategoryId = page.subcategoryId || null;
     State.openSections.add(page.sectionId);
-    if (sc) State.openSubcategories.add(sc.id);
+    for (const anc of ancestors) State.openSubcategories.add(anc.id);
     await App.renderNav();
     App.showView('pageView');
 
-    // Breadcrumb
+    // Breadcrumb with full ancestor chain
     let bc = `<span onclick="App.showDashboard()">Home</span><span class="sep">›</span><span onclick="App.clickSection('${section.id}')">${section.icon} ${section.name}</span>`;
-    if (sc) bc += `<span class="sep">›</span><span onclick="App.clickSubcategory('${sc.id}')">${sc.icon || '📁'} ${sc.name}</span>`;
+    for (const anc of ancestors) {
+      bc += `<span class="sep">›</span><span onclick="App.clickSubcategory('${anc.id}')">${anc.icon || '📁'} ${anc.name}</span>`;
+    }
     bc += `<span class="sep">›</span>${page.title}`;
     document.getElementById('breadcrumb').innerHTML = bc;
 
@@ -500,7 +666,7 @@ const App = {
     await App.renderNav();
   },
 
-  // ── Create: choice modal ──────────────────────────────────────────
+  // ── Create: choice modal — always shown everywhere ────────────────
   newItem() {
     App.openModal('Cosa vuoi creare?', `
       <div class="choice-grid">
@@ -567,8 +733,12 @@ const App = {
 
   // ── CRUD: Subcategories ───────────────────────────────────────────
   async newSubcategory() {
-    const all = (await DB.getAll('subcategories')).filter(sc => sc.sectionId === State.currentSectionId);
-    const maxOrder = all.reduce((m, sc) => Math.max(m, sc.order || 0), 0);
+    // If we're inside a subcategory, create it as a child; otherwise at section root
+    const parentId = State.currentSubcategoryId || null;
+    const allSubs = await DB.getAll('subcategories');
+    const siblings = allSubs.filter(sc => (sc.parentId || null) === parentId && sc.sectionId === State.currentSectionId);
+    const maxOrder = siblings.reduce((m, sc) => Math.max(m, sc.order || 0), 0);
+
     App.openModal('Nuova Sottocategoria', `
       <label>Nome</label>
       <input type="text" id="m_scname" placeholder="es. Barbaro Divino, Mago Divino..." autofocus />
@@ -580,6 +750,7 @@ const App = {
       const sc = {
         id: 'sc' + Date.now(),
         sectionId: State.currentSectionId,
+        parentId: parentId,
         name,
         icon: document.getElementById('m_scicon').value.trim() || '📁',
         order: maxOrder + 1,
@@ -610,13 +781,21 @@ const App = {
 
   async deleteSubcategory() {
     const sc = await DB.get('subcategories', State.currentSubcategoryId);
-    const pages = (await DB.getAll('pages')).filter(p => p.subcategoryId === sc.id);
-    App.openModal('Elimina Sottocategoria', `<p style="color:var(--text2)">Eliminare "<strong style="color:var(--gold)">${sc.name}</strong>" e le sue <strong>${pages.length}</strong> pagine? Questa azione è irreversibile.</p>`, async () => {
-      for (const p of pages) await DB.delete('pages', p.id);
-      await DB.delete('subcategories', sc.id);
-      State.currentSubcategoryId = null;
+    const allSubs  = await DB.getAll('subcategories');
+    const allPages = await DB.getAll('pages');
+    const descIds  = collectDescendantIds(sc.id, allSubs);
+    const allAffectedSubIds = [sc.id, ...descIds];
+    const affectedPages = allPages.filter(p => allAffectedSubIds.includes(p.subcategoryId));
+
+    App.openModal('Elimina Sottocategoria', `<p style="color:var(--text2)">Eliminare "<strong style="color:var(--gold)">${sc.name}</strong>" e tutto il suo contenuto (<strong>${descIds.length}</strong> sottocategorie, <strong>${affectedPages.length}</strong> pagine)? Questa azione è irreversibile.</p>`, async () => {
+      for (const p  of affectedPages)        await DB.delete('pages', p.id);
+      for (const sid of allAffectedSubIds)   await DB.delete('subcategories', sid);
+      // Navigate back to parent subcategory or section
+      const parentId = sc.parentId || null;
+      State.currentSubcategoryId = parentId;
       await App.renderNav();
-      await App.showSection(State.currentSectionId);
+      if (parentId) await App.showSubcategory(parentId);
+      else await App.showSection(State.currentSectionId);
     });
     document.getElementById('modalConfirm').textContent = 'Elimina';
     document.getElementById('modalConfirm').className = 'btn-danger';
