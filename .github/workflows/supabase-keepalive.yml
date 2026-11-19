@@ -3,6 +3,7 @@ name: Keep Supabase Awake
 # The free tier pauses a project after 7 days with no API activity. This pings
 # the project every 5 days so a quiet week never leaves it asleep.
 # Scheduled runs only fire from the default branch.
+# Secrets (Settings > Secrets and variables > Actions): SUPABASE_URL, SUPABASE_ANON_KEY.
 
 on:
   schedule:
