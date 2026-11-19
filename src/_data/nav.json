@@ -1,0 +1,81 @@
+[
+  {
+    "num": "Capitolo I",
+    "titolo": "Iniziare",
+    "desc": "Come è fatto il sistema e come usare il wiki.",
+    "pagine": [
+      { "titolo": "Introduzione", "url": "/iniziare/introduzione/" }
+    ]
+  },
+  {
+    "num": "Capitolo II",
+    "titolo": "Il sistema m+nd",
+    "desc": "Doppia progressione, Ascensione, Quintessenza e scaling.",
+    "pagine": [
+      { "titolo": "La doppia progressione", "url": "/sistema/doppia-progressione/" },
+      { "titolo": "L'Ascensione Divina", "url": "/sistema/ascensione-divina/" },
+      { "titolo": "Quintessenza e fedeli", "url": "/sistema/quintessenza/" },
+      { "titolo": "Scaling divino e regole canoniche", "url": "/sistema/scaling-divino/" },
+      { "titolo": "Avatar", "url": "/sistema/avatar/" },
+      { "titolo": "I Settori: profili meccanici", "url": "/sistema/settori/" }
+    ]
+  },
+  {
+    "num": "Capitolo III",
+    "titolo": "Classi Divine",
+    "desc": "I Divine Path, dal 1d al 20d.",
+    "pagine": [
+      { "titolo": "Regole dei Divine Path", "url": "/classi-divine/regole-dei-divine-path/" },
+      { "titolo": "Negromante Divino", "url": "/classi-divine/negromante-divino/" },
+      { "titolo": "Maestro di Battaglia Divino", "url": "/classi-divine/maestro-di-battaglia-divino/" },
+      { "titolo": "Berserker Divino", "dev": true },
+      { "titolo": "Evocatore Divino", "dev": true },
+      { "titolo": "Chierico della Vita Divino", "dev": true }
+    ]
+  },
+  {
+    "num": "Capitolo IV",
+    "titolo": "Classi e sottoclassi",
+    "desc": "Classi homebrew e altre opzioni per la 5e.",
+    "pagine": [
+      { "titolo": "Signore delle Bestie", "url": "/classi/signore-delle-bestie/" },
+      { "titolo": "Altre opzioni 5e — Erede del Vuoto Marino", "url": "/classi/erede-del-vuoto-marino/" }
+    ]
+  },
+  {
+    "num": "Capitolo V",
+    "titolo": "Abilità e sistemi",
+    "desc": "Sistemi gestiti dai giocatori.",
+    "pagine": [
+      { "titolo": "Gradi di Maestria", "url": "/sistemi/gradi-di-maestria/" },
+      { "titolo": "Gestione degli Insediamenti", "url": "/sistemi/gestione-insediamenti/" },
+      { "titolo": "Lealtà dei PNG", "url": "/sistemi/lealta-dei-png/" }
+    ]
+  },
+  {
+    "num": "Capitolo VI",
+    "titolo": "Incantesimi",
+    "desc": "Filtri per classe, tempo di lancio, componenti e gittata.",
+    "pagine": [
+      { "titolo": "Tutti gli incantesimi homebrew", "url": "/incantesimi/" }
+    ]
+  },
+  {
+    "num": "Capitolo VII",
+    "titolo": "Oggetti homebrew",
+    "desc": "Schede degli oggetti, divise per rarità.",
+    "pagine": [
+      { "titolo": "Tutti gli oggetti homebrew", "url": "/oggetti/" }
+    ]
+  },
+  {
+    "num": "Appendici",
+    "titolo": "Riferimento",
+    "desc": "Glossario, tabelle riassuntive, sezioni in sviluppo.",
+    "pagine": [
+      { "titolo": "Glossario", "url": "/riferimento/glossario/" },
+      { "titolo": "Tabelle riassuntive", "url": "/riferimento/tabelle-riassuntive/" },
+      { "titolo": "In sviluppo", "url": "/riferimento/in-sviluppo/" }
+    ]
+  }
+]

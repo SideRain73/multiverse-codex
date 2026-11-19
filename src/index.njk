@@ -1,0 +1,49 @@
+---
+layout: base.njk
+ricercaInPagina: true
+---
+<main id="contenuto" class="home">
+  <section class="eroe">
+    <p class="occhiello">{{ site.sottotitolo }}</p>
+    <h1>{{ site.titolo }}</h1>
+    <div class="ornamento" aria-hidden="true"><span></span></div>
+    <p class="descrizione">{{ site.descrizione }}</p>
+
+    <div class="ricerca ricerca-eroe" role="search">
+      <label class="nascosto" for="cerca-home">Cerca nel wiki</label>
+      <div class="ricerca-campo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="cerca-home" type="search" placeholder="Cerca regole, incantesimi, oggetti, termini…" autocomplete="off" data-cerca>
+        <kbd class="scorciatoia">Ctrl K</kbd>
+      </div>
+      <div class="ricerca-risultati" hidden data-risultati></div>
+    </div>
+    <p class="esempi">Prova: <a href="/riferimento/glossario/#qp">QP</a> · <a href="/riferimento/glossario/#rango-divino">Rango Divino</a> · <a href="/riferimento/glossario/#apc">APC</a> · <a href="/riferimento/glossario/#frammenti-di-morte">Frammenti di Morte</a></p>
+  </section>
+
+  <section class="indice-capitoli" aria-labelledby="titolo-indice">
+    <h2 id="titolo-indice">Indice dei capitoli</h2>
+    <div class="capitoli">
+      {% for cap in nav %}
+      <article class="capitolo">
+        <p class="menu-num">{{ cap.num }}</p>
+        <h3>{{ cap.titolo }}</h3>
+        <p class="desc">{{ cap.desc }}</p>
+        <ul>
+          {% for p in cap.pagine %}
+          <li>
+            {% if p.dev %}
+              <span class="voce-muta">{{ p.titolo }}</span><span class="etichetta-sviluppo">In sviluppo</span>
+            {% elif p.url | haPagina(collections.all) %}
+              <a href="{{ p.url }}">{{ p.titolo }}</a>
+            {% else %}
+              <span class="voce-muta">{{ p.titolo }}</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</main>

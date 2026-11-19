@@ -1,0 +1,121 @@
+{
+  "sezioni": [
+    {
+      "titolo": "Notazione del sistema",
+      "id": "notazione",
+      "voci": [
+        { "id": "m", "termine": "m", "def": "Livello mortale (o «materiale»). Il livello di classe D&D 5e standard, da 1 a 20. Rappresenta ciò che il personaggio *sa fare*." },
+        { "id": "n", "termine": "n", "alias": ["nd"], "def": "Numero di livelli divini posseduti, da 0 a 20." },
+        { "id": "d", "termine": "d", "def": "Suffisso che marca la componente divina, con la stessa funzione che «i» ha per i numeri complessi (z = a + bi). Un livello divino si scrive sempre con il suffisso: 1d, 5d, 20d." },
+        { "id": "m-nd", "termine": "m+nd", "def": "Notazione completa di un personaggio a doppia progressione. Es. **20+7d** = livello mortale 20, livello divino 7. Il livello divino rappresenta quanto la volontà del personaggio *può piegare la realtà*." },
+        { "id": "lv", "termine": "lv", "def": "Abbreviazione di livello (mortale, salvo indicazione contraria)." }
+      ]
+    },
+    {
+      "titolo": "Termini di progressione",
+      "id": "progressione",
+      "voci": [
+        { "id": "rango-divino", "termine": "Rango Divino", "alias": ["Rango"], "def": "Il livello divino di un personaggio, sempre derivato dai QP tramite soglie fisse. Le soglie sono **moltiplicative a fasce**: ancora 1d = 15.000 QP, ×1,4 tra ranghi della stessa fascia, ×4 nel passaggio di fascia. Si articola in due valori: **Rango Massimo** e **Rango Corrente**." },
+        { "id": "rango-massimo", "termine": "Rango Massimo", "alias": ["nd_max"], "def": "Il rango più alto mai raggiunto, derivato dai **QP Massimi Raggiunti**. **Permanente**: non scende mai. Determina quali abilità del Divine Path sono sbloccate per sempre." },
+        { "id": "rango-corrente", "termine": "Rango Corrente", "alias": ["nd_cur"], "def": "Il rango derivato dai **QP Correnti** (il pool spendibile in questo momento). Determina le formule di scaling *attuali*: PF, moltiplicatore danno, CA, Bd, TS, stat cap. Vincolo: il Rango Corrente non supera mai il Rango Massimo." },
+        { "id": "bd", "termine": "Bd", "alias": ["Bonus Divino"], "def": "**Bonus Divino.** Si somma a tiri per colpire, CD e **tutti** i TS (con o senza competenza), in aggiunta al Bonus di Competenza dove presente. Fisso per fascia: 1d–5d **+2** · 6d–10d **+3** · 11d–15d **+4** · 16d–20d **+6**." },
+        { "id": "caratteristiche-massime", "termine": "Caratteristiche Massime", "alias": ["stat cap", "Car. Max"], "def": "Limite massimo della **parte divina** dei punteggi di caratteristica di un mortale asceso (APC divini ed eccezioni dichiarate di origine divina). 21 a 1d, +1 per livello divino, fino a 40 a 20d. Non taglia mai la parte mortale del punteggio. Se il Rango Corrente scende, la parte divina sopra il nuovo tetto resta sospesa finché il rango non risale. Non si applica alle creature di natura divina nata né agli NPC." },
+        { "id": "tetto-mortale", "termine": "Tetto mortale", "def": "Limite di **20** a ogni caratteristica per classi e razze mortali. Lo alzano solo Tomi, Manuali, *Desiderio* e le creazioni del DM; eccezione di sistema: *Campione Primordiale* (Barbaro lv 20, FOR e COS fino a 24). Gli NPC non hanno tetto." },
+        { "id": "punteggio-effettivo", "termine": "Punteggio effettivo", "def": "Il punteggio con cui gioca un mortale asceso: il maggiore fra la parte mortale e la somma di parte mortale e parte divina limitata alle Caratteristiche Massime del Rango Corrente. Un oggetto che fissa un punteggio (es. una Cintura) non cambia il punteggio reale." },
+        { "id": "apc", "termine": "APC", "alias": ["Aumento Punteggio Caratteristica"], "def": "**Aumento Punteggio Caratteristica.** Incremento di caratteristica concesso dall'avanzamento di livello. Ogni occorrenza dà +2 a un punteggio oppure +1 a due punteggi diversi. Esiste in **due ambiti distinti**, da non confondere: **APC divini** e **APC mortali**." },
+        { "id": "apc-divini", "termine": "APC divini", "def": "Concessi dalla progressione divina, a **1d, 4d, 8d, 12d, 16d, 20d**: **sei** occorrenze, identiche per **tutte** le classi divine, per un totale di **+12 punti**. Tetto: Caratteristiche Massime del **Rango Corrente**. I punti che il tetto non consente di applicare subito **si accantonano** e si applicano in un rango successivo, appena il tetto lo permette." },
+        { "id": "apc-mortali", "termine": "APC mortali", "def": "Concessi dalla progressione di classe D&D 5e, ai livelli **4, 8, 12, 16, 19**: cinque occorrenze, +10 punti. Valgono per le classi puramente mortali del sistema (es. Signore delle Bestie) e per i livelli 1–20 di qualunque personaggio. Tetto: il **tetto mortale** di 20." },
+        { "id": "eccezione-dichiarata", "termine": "Eccezione dichiarata", "def": "Deroga a una regola di sistema, approvata dal designer e **registrata**. Una deroga non registrata è un refuso, non un'eccezione. Incrementi di caratteristica fuori dagli APC: **Riflessi Precognitivi** (Maestro di Battaglia, 5d, +1 permanente a Destrezza). Eccezione di sistema al tetto mortale: **Campione Primordiale** (Barbaro lv 20)." },
+        { "id": "unita-di-tempo", "termine": "Unità di tempo", "def": "Le abilità possono misurare durata e ricarica **sia** in unità di calendario (ore, giorni, settimane) **sia** in cicli di gioco (round, incontro, giornata d'avventura, riposo lungo). Nessuna delle due ha precedenza." },
+        { "id": "incontro", "termine": "Incontro", "alias": ["per incontro"], "def": "Lo **scontro intero**, dall'iniziativa alla fine del combattimento. «Per combattimento» è un sinonimo. Una durata «per 1 incontro» copre tutto lo scontro; un uso «1 per incontro» si ricarica alla fine dello scontro." },
+        { "id": "giornata-d-avventura", "termine": "Giornata d'avventura", "def": "Il tempo fino al **riposo lungo** successivo." },
+        { "id": "gradi-di-divinita", "termine": "Gradi di Divinità", "alias": ["fascia", "Eroe Asceso", "Divinità Minore", "Divinità Intermedia", "Divinità Maggiore"], "def": "Fasce del Rango Divino: 1d–5d **Eroe Asceso** (Quasi-Divinità) · 6d–10d **Divinità Minore** · 11d–15d **Divinità Intermedia** · 16d–20d **Divinità Maggiore**." },
+        { "id": "requisiti-di-livello-base", "termine": "Requisiti di livello base", "def": "Per ottenere livelli 1d–5d serve lv mortale 15+. Dal 6d in poi serve lv mortale 20." },
+        { "id": "flusso-divino", "termine": "Flusso Divino", "dev": true, "def": "Valore 0.0–1.0 che governa perdita e recupero di Rango. Agisce **esclusivamente sul Rango Corrente**: non può mai ridurre il Rango Massimo né le abilità già sbloccate. Le regole complete sono in sviluppo." },
+        { "id": "grado-di-maestria", "termine": "Grado di Maestria", "alias": ["Gradi di Maestria"], "def": "Grado di avanzamento di una singola abilità di caratteristica (0–4: Incompetente, Principiante, Competente, Esperto, Maestro), indipendente dal livello." }
+      ]
+    },
+    {
+      "titolo": "Risorse",
+      "id": "risorse",
+      "voci": [
+        { "id": "qp", "termine": "QP", "alias": ["Quintessenza"], "def": "**Quintessenza.** Risorsa cosmica universale generata dai fedeli e da fonti secondarie. Governa **esclusivamente** il Rango Divino. Si articola in due valori: **QP Massimi Raggiunti** (storico, mai scende, determina il Rango Massimo) e **QP Correnti** (pool spendibile — overflow casting, donazioni — determina il Rango Corrente)." },
+        { "id": "overflow-casting", "termine": "Overflow Casting", "dev": true, "def": "Lancio di un incantesimo a slot esauriti, pagato in QP Correnti (tasso 1:1). **Incantatore divino** sui propri QP: lo slot di 9° costa il 5% della soglia del suo Rango Corrente, ogni livello sotto un terzo del precedente. **Chierico o Paladino mortale** sui QP della propria divinità: tabella fissa, da 10 a 65.610 QP." },
+        { "id": "risorsa-locale-di-path", "termine": "Risorsa locale di path", "alias": ["risorsa di path", "risorse di path"], "def": "Risorsa specifica di un Divine Path, spesa per attivare le sue abilità. Base 5 a 1d, +1 per livello divino, max 24 a 20d (default). Esempi: **Frammenti di Morte** (Negromante Divino), **Punti Maestria** (Maestro di Battaglia Divino)." },
+        { "id": "slot-evocazioni", "termine": "Slot Evocazioni", "alias": ["Slot Evocazione"], "def": "Contenitori dei servitori del **Negromante Divino**: 1 a 1d, +1 per livello divino, 20 a 20d. Ospitano i non-morti legati e **non si spendono**; il loro numero è il tetto per pool dei servitori. Risorsa locale di path." },
+        { "id": "pd", "termine": "PD", "alias": ["Punti Dominio"], "def": "**Punti Dominio.** Risorsa locale della classe mortale Signore delle Bestie." },
+        { "id": "mana", "termine": "Mana", "def": "Nome della risorsa energetica del settore A-002 (energia di settore). **Non** è una risorsa di path." },
+        { "id": "frammenti-di-morte", "termine": "Frammenti di Morte", "alias": ["Fr"], "def": "Risorsa da spendere del **Negromante Divino**, distinta sia dai QP sia dall'energia di settore. Pool **standard**: 5 a 1d, +1 per livello divino, 24 a 20d. Recupero: tutti con il riposo lungo, metà con il breve; in combattimento +1 quando muore una creatura ostile che partecipa allo scontro entro 18 m dal Negromante o da un suo servitore, al massimo +1 per round." },
+        { "id": "regola-d-oro", "termine": "Regola d'Oro", "def": "**Risorse di path ≠ QP.** PD, Slot Evocazioni, Frammenti di Morte, Punti Maestria e ogni altra risorsa locale non si sovrappongono mai alla Quintessenza. Un personaggio 8d con 0 punti nella risorsa del path resta 8d: semplicemente non può attivare abilità finché non la rigenera." }
+      ]
+    },
+    {
+      "titolo": "Termini di combattimento",
+      "id": "combattimento",
+      "voci": [
+        { "id": "ca", "termine": "CA", "def": "Classe Armatura. Per un essere divino: CA base + nd × 0,30, con il bonus arrotondato all'intero più vicino (0,5 per eccesso)." },
+        { "id": "ts", "termine": "TS", "alias": ["tiro salvezza", "tiri salvezza"], "def": "Tiro Salvezza. Per un essere divino: mod + Bonus Competenza (se competente) + Bd, su tutti e sei i TS." },
+        { "id": "pf", "termine": "PF", "def": "Punti Ferita." },
+        { "id": "txc", "termine": "TxC", "alias": ["tiro per colpire", "tiri per colpire"], "def": "Tiro per Colpire. Usa **sempre** il modificatore di **Destrezza** + Bonus Competenza + Bd. La Forza non è mai usata per il TxC. *Eccezione Creatura Massiccia:* con FOR ≥ 26 si usa il migliore tra FOR e DES." },
+        { "id": "bonus-al-danno", "termine": "Bonus al Danno", "def": "Modificatore aggiunto al danno di un attacco. Usa **sempre** il modificatore di **Forza** (salvo i casi standard 5e di armi accurate e armi a distanza, che possono usare Destrezza)." },
+        { "id": "moltiplicatore-danno", "termine": "Moltiplicatore danno", "alias": ["moltiplicatore"], "def": "2 + nd²/16. Si applica al totale di ogni istanza di danno in dadi e valori fissi di un essere divino: attacchi, incantesimi mortali (trucchetti compresi), **cure** in dadi e valori fissi degli incantesimi mortali e **abilità di Divine Path**. I dadi scritti in un'abilità sono sempre dadi base. **Non** si applica ai valori in % dei PF né ai valori derivati (trasferiti, riflessi, assorbiti, cure pari a una quota del danno), purché il valore di partenza contenga già la formula divina; altrimenti il derivato riceve il moltiplicatore di chi lo produce. Negli effetti misti ogni componente segue la propria regola." },
+        { "id": "arrotondamento", "termine": "Arrotondamento", "def": "Ogni formula del sistema si arrotonda all'**intero più vicino**: da ,0 a ,4 per difetto, da ,5 a ,9 per eccesso. Deroga alla 5e." },
+        { "id": "origine", "termine": "Origine divina / origine mortale", "alias": ["origine divina", "origine mortale"], "def": "È di **origine divina** ogni effetto che viene da un Divine Path, da un'entità divina in quanto tale o da un essere divino, compresi i suoi incantesimi mortali. È di **origine mortale** solo ciò che lancia o produce un mortale (0d)." },
+        { "id": "incantesimo-neutralizzante", "termine": "Incantesimo neutralizzante", "def": "Incantesimo che con un solo TS toglie il bersaglio dallo scontro o ne prende il controllo. Lista chiusa, aggiornabile dal DM. Una creatura con livelli divini ha vantaggio (+1 GV) ai TS contro di essi, se l'incantatore non ha Rango Massimo superiore al suo." },
+        { "id": "servitore", "termine": "Servitore", "alias": ["servitori"], "def": "Creatura evocata, rianimata o vincolata da un'abilità di Divine Path. Non eredita lo scaling divino del padrone, salvo concessione esplicita dell'abilità (mai sopra il suo Rango Corrente). Ogni abilità che crea servitori dichiara un tetto di CR per servitore e un tetto per pool, letti sul Rango Corrente del padrone." },
+        { "id": "creatura-massiccia", "termine": "Creatura Massiccia", "def": "Creatura con **Forza ≥ 26**. Usa il migliore tra modificatore di Forza e di Destrezza per il TxC: il suo attacco copre un'area invece di un punto, rendendo la precisione irrilevante." },
+        { "id": "cd", "termine": "CD", "def": "Classe di Difficoltà. Per un essere divino: 8 + modificatore di caratteristica + Bonus Competenza + Bd." },
+        { "id": "dpr", "termine": "DPR", "def": "Danno Per Round." },
+        { "id": "cr", "termine": "CR", "alias": ["GS", "Grado di Sfida"], "def": "Grado di Sfida delle creature. **I PG non hanno CR.**" },
+        { "id": "attacco-extra", "termine": "Attacco Extra", "def": "Terminologia corretta per gli attacchi multipli dei PG. «Multiattacco» è terminologia esclusiva dei mostri." },
+        { "id": "gv", "termine": "GV", "alias": ["Grado di Vantaggio"], "def": "**Grado di Vantaggio.** Numero intero che riassume vantaggi e svantaggi attivi su un tiro. Ogni **fonte distinta** di vantaggio vale **+1**, ogni fonte distinta di svantaggio **−1**; le fonti si annullano **una a una**. Con GV pari a ±N si tirano **(N+1)d20** tenendo il migliore (positivo) o il peggiore (negativo). Tetto: **±3**." },
+        { "id": "vantaggio-cumulativo", "termine": "Vantaggio / Svantaggio cumulativo", "alias": ["vantaggio cumulativo"], "def": "**Deroga alla 5e.** Nel manuale base vantaggio e svantaggio non si sommano e si annullano a vicenda in blocco. Nel sistema m+nd **si cumulano** tramite il GV. Un solo grado di vantaggio corrisponde al vantaggio standard di D&D 5e." },
+        { "id": "doppio-vantaggio", "termine": "Doppio vantaggio / Doppio svantaggio", "alias": ["doppio vantaggio", "doppio svantaggio"], "def": "Espressione abbreviata per **GV +2** e **GV −2**: 3d20 tenendo rispettivamente il migliore e il peggiore." },
+        { "id": "tipologie-di-abilita", "termine": "Passiva / Attiva / Reazione", "alias": ["Passiva", "Attiva", "Reazione"], "def": "Tipologie di abilità: sempre attiva senza costo · richiede attivazione (di norma con costo in risorsa locale) · si attiva come Reazione a un trigger." }
+      ]
+    },
+    {
+      "titolo": "Entità",
+      "id": "entita",
+      "voci": [
+        { "id": "personaggio-divino", "termine": "Personaggio Divino", "alias": ["essere divino"], "def": "PG (o PNG) con livello divino ≥ 1d. Ha lv mortale 15–20, fino a 3 Divine Path, un pool QP, stat cap e Bd." },
+        { "id": "divine-path", "termine": "Divine Path", "def": "Percorso di progressione divina 1d–20d. Tre tipi: **sottoclasse** (obbligatorio, legato alla classe base), **razziale** (in sviluppo), **categoria** (in sviluppo). Massimo 3 path per personaggio. Meccaniche identiche in tutti i settori; cambia solo il flavor." },
+        { "id": "avatar", "termine": "Avatar", "def": "Manifestazione di un personaggio divino in un altro settore, alimentata da QP allocati." },
+        { "id": "compagno", "termine": "Compagno", "alias": ["Compagni"], "def": "Creatura legata a un Signore delle Bestie tramite Vincolo. Usa lo statblock del Manuale dei Mostri (nomenclatura italiana; fonti non-MM = HB*)." },
+        { "id": "fedele", "termine": "Fedele comune / Vero Credente", "alias": ["Vero Credente", "fedeli"], "def": "Gerarchia dei fedeli: il Vero Credente richiede fede genuina **e** riconoscimento formale tramite rito. Genera più QP." },
+        { "id": "apostolo", "termine": "Apostolo", "def": "Fedele asceso alla fascia 1d–5d. Ponte tra piano mortale e divino, non un gradino ecclesiastico." },
+        { "id": "credente", "termine": "Credente (primo)", "alias": ["primo credente"], "def": "Il primo essere vivente che crede ciecamente nel personaggio: requisito per 1d. La statistica **Fedeltà** è in sviluppo." },
+        { "id": "monumento-sacro", "termine": "Monumento sacro", "def": "Requisito per 1d: edicola, mausoleo, chiesa, statua, presepe o tabernacolo. Conta in base a qualità e condizione." },
+        { "id": "hb", "termine": "HB*", "def": "Contenuto homebrew: qualsiasi creatura o materiale non proveniente dal Manuale dei Mostri 5e." }
+      ]
+    },
+    {
+      "titolo": "Termini di settore",
+      "id": "settore",
+      "voci": [
+        { "id": "settore", "termine": "Settore", "alias": ["Settori"], "def": "Uno dei cinque universi del multiverso: A-001 Informe · A-002 Fantasy · A-003 Divino · A-004 Murim · A-005 Corrotto." },
+        { "id": "energia-di-settore", "termine": "Energia di settore", "def": "La fonte di potere di ciascun settore: primordiale (A-001), mana (A-002), divina (A-003), ki (A-004), miasma (A-005)." },
+        { "id": "flavor-layer", "termine": "Flavor layer", "alias": ["flavor"], "def": "Strato narrativo delle abilità: la meccanica è identica in tutti i settori, cambia solo la descrizione (es. Proiettile Arcano / Scoppio di Ki / Dardo di Miasma)." },
+        { "id": "profilo-cosmologico", "termine": "Profilo cosmologico", "def": "Insieme di regole che definisce cosa esiste in un settore: slot incantesimo, Punti Ki, dèi, accesso planare." }
+      ]
+    },
+    {
+      "titolo": "Gestione degli insediamenti",
+      "id": "insediamenti",
+      "voci": [
+        { "id": "bg", "termine": "bg", "alias": ["Braccio-giorno", "Braccia"], "def": "**Braccio-giorno.** Unità di lavoro: il lavoro di una persona per un giorno intero su un'opera. Valore base: adulto **1**, anziano abile **½**, ragazzo **½**, bambino o anziano infermo **0**." },
+        { "id": "moltiplicatore-di-popolazione", "termine": "Moltiplicatore di popolazione", "def": "Coefficiente applicato al valore base delle Braccia: **×1** per una popolazione comune, **×3** per una popolazione con doni, i cui lavoratori sono più forti o più veloci." },
+        { "id": "braccia-libere", "termine": "Braccia libere", "def": "Braccia totali meno **impegni fissi** e **sussistenza**: il solo budget di lavoro che il PG assegna alle opere ogni giorno." },
+        { "id": "opera", "termine": "Opera", "alias": ["opere"], "def": "Struttura da costruire in un insediamento. La sua scheda indica costo in bg, materiali, giorni minimi, eventuale serratura ed effetto." },
+        { "id": "serratura", "termine": "Serratura", "def": "Condizione che impedisce di avviare un'opera finché non è soddisfatta. Tre tipi: **persona o dono** (manca chi sa farla), **permesso** (serve l'autorizzazione di un'autorità), **figura riluttante** (una persona presente va convinta)." },
+        { "id": "indicatori-di-comunita", "termine": "Indicatori di comunità", "def": "Tre indicatori **distinti**, tutti da 0 a 10: **Morale**, **Fiducia**, **Efficienza**. Ogni insediamento usa solo quelli dichiarati nella sua scheda." },
+        { "id": "morale", "termine": "Morale", "def": "Lo stato d'animo collettivo di una comunità in difficoltà. Modifica le CD di conversione." },
+        { "id": "fiducia", "termine": "Fiducia", "def": "L'adesione autentica verso chi guida, distinta dall'obbedienza. Modifica le CD di conversione e quelle per convincere una figura riluttante." },
+        { "id": "efficienza", "termine": "Efficienza", "def": "Quanto l'insediamento rende come macchina di lavoro. Sposta le Braccia libere e i giorni minimi delle opere." },
+        { "id": "variante-firmata", "termine": "Variante firmata", "def": "Versione di un'opera che porta l'impronta del PG: costa di più, rende di più e attira attenzione. Ogni tipo di firma aggiunge una propria variazione alla regola base." },
+        { "id": "leva-di-conversione", "termine": "Leva di conversione", "def": "Ciò che può davvero spostare la fede degli abitanti di un insediamento. È dichiarata nella sua scheda e decide quanto è difficile convertirli." },
+        { "id": "fedele-senza-qp", "termine": "Fedele senza QP", "def": "Fedele di un personaggio che non soddisfa le condizioni di accesso alla Quintessenza (per esempio il livello mortale 15) e non ha una divinità custode. Conta per i requisiti narrativi del Rango Divino, ma **non produce QP**. Quando il personaggio soddisfa le condizioni, i suoi fedeli generano QP **solo da quel momento, senza recupero retroattivo**." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+---
+layout: pagina.njk
+pagination:
+  data: incantesimi
+  size: 1
+  alias: s
+permalink: "/incantesimi/{{ s.slug }}/"
+sezione: Incantesimi
+stampabile: true
+eleventyComputed:
+  title: "{{ s.nome }}"
+  occhiello: "Incantesimo homebrew · {{ s.livelloTesto }}"
+  sottotitolo: "{{ s.livelloScuola | testoSemplice }}"
+---
+<dl class="scheda scheda-incantesimo">
+  <div><dt>Tempo di lancio</dt><dd>{{ s.tempo }}</dd></div>
+  <div><dt>Gittata</dt><dd>{{ s.gittata }}</dd></div>
+  <div><dt>Componenti</dt><dd>{{ s.componenti }}</dd></div>
+  <div><dt>Durata</dt><dd>{{ s.durata }}</dd></div>
+  <div class="scheda-larga"><dt>Classi</dt><dd>{{ s.classi }}</dd></div>
+</dl>
+
+{{ s.corpo | renderMdBlock | safe }}
+
+<p class="nota-tabella"><a href="/incantesimi/">← Tutti gli incantesimi</a> · CD del tiro salvezza e bonus di attacco: quelli standard della classe che lancia.</p>

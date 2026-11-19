@@ -1,0 +1,32 @@
+---
+layout: pagina.njk
+title: Oggetti homebrew
+sezione: Oggetti homebrew
+occhiello: Oggetti · HB*
+sottotitolo: Gli oggetti magici e arcano-tecnologici creati per il Multiverso, divisi per rarità.
+permalink: /oggetti/
+---
+<p>Ogni scheda riporta descrizione, proprietà, tempi di recupero e limitazioni dell'oggetto. Dove compare un prezzo, è <strong>indicativo e provvisorio</strong>: chiedi al DM prima di contarci.</p>
+
+{% set rarita = ["Non comune", "Raro", "Molto raro", "Leggendario"] %}
+{% for r in rarita %}
+<h2 id="{{ r | slugify }}">{{ r }}</h2>
+<ul class="lista-incantesimi" data-pagefind-ignore>
+  {% for p in collections.oggettoManuale | sort(false, false, "data.title") %}{% if p.data.rarita == r %}
+  <li class="voce-incantesimo">
+    <a href="{{ p.url }}">
+      <span class="vi-testa"><span class="vi-nome">{{ p.data.title }}</span><span class="vi-livello">{{ r }}</span></span>
+      <span class="vi-dettagli">{{ p.data.sottotitolo }}</span>
+    </a>
+  </li>
+  {% endif %}{% endfor %}
+  {% for o in oggetti %}{% if o.rarita == r %}
+  <li class="voce-incantesimo">
+    <a href="/oggetti/{{ o.slug }}/">
+      <span class="vi-testa"><span class="vi-nome">{{ o.titolo }}</span><span class="vi-livello">{{ r }}</span></span>
+      <span class="vi-dettagli">{{ o.tipo }}</span>
+    </a>
+  </li>
+  {% endif %}{% endfor %}
+</ul>
+{% endfor %}

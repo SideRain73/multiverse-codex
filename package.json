@@ -1,0 +1,15 @@
+{
+  "name": "codex-del-multiverso",
+  "private": true,
+  "description": "Wiki dei giocatori del sistema homebrew m+nd per D&D 5e",
+  "type": "module",
+  "scripts": {
+    "build": "node node_modules/@11ty/eleventy/cmd.cjs && node node_modules/pagefind/lib/runner/bin.cjs --site _site",
+    "dev": "npm run build && node node_modules/@11ty/eleventy/cmd.cjs --serve --port=8080"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.8",
+    "markdown-it-attrs": "^4.3.1",
+    "pagefind": "^1.6.0"
+  }
+}

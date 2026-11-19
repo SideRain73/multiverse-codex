@@ -1,0 +1,19 @@
+---
+layout: pagina.njk
+title: Glossario
+sezione: Riferimento
+occhiello: Riferimento
+sottotitolo: Le definizioni canoniche dei termini del sistema m+nd.
+permalink: /riferimento/glossario/
+---
+<p>In caso di dubbio tra due pagine del wiki, prevale la definizione riportata qui.</p>
+
+{% for s in glossario.sezioni %}
+<h2 id="{{ s.id }}">{{ s.titolo }}</h2>
+{% for v in s.voci %}
+<div class="voce-glossario">
+  <h3 id="{{ v.id }}">{{ v.termine }}{% if v.dev %} <span class="etichetta-sviluppo">In sviluppo</span>{% endif %}</h3>
+  <p>{{ v.def | renderMd | safe }}</p>
+</div>
+{% endfor %}
+{% endfor %}

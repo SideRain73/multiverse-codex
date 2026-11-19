@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="it" data-base="{{ site.base }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} · {% endif %}{{ site.titolo }}</title>
+<meta name="description" content="{{ descrizione or site.descrizione }}">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("codex-tema"); if (t) document.documentElement.dataset.theme = t;
+    var s = localStorage.getItem("codex-testo"); if (s) document.documentElement.dataset.size = s;
+  } catch (e) {}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Crimson+Pro:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<a class="salta" href="#contenuto">Vai al contenuto</a>
+
+<header class="testata">
+  <div class="testata-dentro">
+    <button class="pulsante-icona" type="button" aria-label="Apri l'indice del wiki" aria-controls="menu" aria-expanded="false" data-apri-menu>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    </button>
+    <a class="marchio" href="/">{{ site.titolo }}</a>
+    <nav class="nav-principale" aria-label="Sezioni principali">
+      <a href="/sistema/doppia-progressione/">Il sistema</a>
+      <a href="/classi-divine/regole-dei-divine-path/">Classi Divine</a>
+      <a href="/classi/signore-delle-bestie/">Classi</a>
+      <a href="/incantesimi/">Incantesimi</a>
+      <a href="/oggetti/">Oggetti</a>
+      <a href="/riferimento/glossario/">Glossario</a>
+    </nav>
+    {% if not ricercaInPagina %}
+    <div class="ricerca ricerca-testata" role="search">
+      <label class="nascosto" for="cerca-testata">Cerca nel wiki</label>
+      <div class="ricerca-campo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="cerca-testata" type="search" placeholder="Cerca…" autocomplete="off" data-cerca>
+        <kbd class="scorciatoia">Ctrl K</kbd>
+      </div>
+      <div class="ricerca-risultati" hidden data-risultati></div>
+    </div>
+    {% endif %}
+    <div class="comandi" role="group" aria-label="Lettura">
+      <button class="pulsante-testo" type="button" data-testo="-1" aria-label="Testo più piccolo">A−</button>
+      <button class="pulsante-testo" type="button" data-testo="1" aria-label="Testo più grande">A+</button>
+      <button class="pulsante-icona" type="button" data-tema aria-label="Cambia tema chiaro o scuro">
+        <svg class="icona-luna" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg class="icona-sole" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu-sfondo" hidden data-sfondo-menu></div>
+<nav id="menu" class="menu" aria-label="Indice del wiki" hidden>
+  <div class="menu-testa">
+    <span class="menu-titolo">Indice</span>
+    <button class="pulsante-icona" type="button" aria-label="Chiudi l'indice" data-chiudi-menu>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </div>
+  {% for cap in nav %}
+  <div class="menu-capitolo">
+    <p class="menu-num">{{ cap.num }}</p>
+    <p class="menu-cap-titolo">{{ cap.titolo }}</p>
+    <ul>
+      {% for p in cap.pagine %}
+      <li>
+        {% if p.dev %}
+          <span class="voce-muta">{{ p.titolo }}</span> <span class="etichetta-sviluppo">In sviluppo</span>
+        {% elif p.url | haPagina(collections.all) %}
+          <a href="{{ p.url }}"{% if p.url == page.url %} aria-current="page"{% endif %}>{{ p.titolo }}</a>
+        {% else %}
+          <span class="voce-muta">{{ p.titolo }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</nav>
+
+{{ content | safe }}
+
+<footer class="piede">
+  <p>Contenuti per i giocatori · {{ site.titolo }}</p>
+</footer>
+
+<script id="dati-glossario" type="application/json">{{ glossario | glossarioMini | dump | safe }}</script>
+<script src="/assets/js/app.js" defer></script>
+{% if scriptExtra %}<script src="{{ scriptExtra }}" defer></script>{% endif %}
+</body>
+</html>

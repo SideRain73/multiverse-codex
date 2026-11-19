@@ -1,0 +1,32 @@
+---
+layout: base.njk
+---
+<div class="pagina">
+  <aside class="indice-pagina" aria-label="In questa pagina">
+    <details open data-indice-box>
+      <summary><span class="indice-titolo">In questa pagina</span></summary>
+      <nav data-indice></nav>
+    </details>
+    <div class="legenda">
+      <p class="legenda-titolo">Tipi di collegamento</p>
+      <p><span class="gloss finto">Termine</span> · glossario</p>
+      <p><span class="link-finto">Pagina</span> · nel wiki</p>
+      <p><span class="link-finto">Sito</span> ↗ · esterno</p>
+    </div>
+  </aside>
+
+  <main id="contenuto" class="contenuto" data-pagefind-body>
+    <nav class="percorso" aria-label="Percorso" data-pagefind-ignore>
+      <a href="/">Home</a>{% if sezione %} › <span>{{ sezione }}</span>{% endif %}
+    </nav>
+    {% if occhiello %}<p class="occhiello">{{ occhiello }}</p>{% endif %}
+    <div class="titolo-riga">
+      <h1 data-pagefind-meta="title">{{ title }}</h1>
+      {% if stampabile %}<button class="pulsante-secondario" type="button" data-stampa data-pagefind-ignore>Versione stampabile</button>{% endif %}
+    </div>
+    {% if sottotitolo %}<p class="sottotitolo">{{ sottotitolo }}</p>{% endif %}
+    <div class="prosa">
+{{ content | safe }}
+    </div>
+  </main>
+</div>

@@ -1,0 +1,17 @@
+---
+layout: pagina.njk
+pagination:
+  data: oggetti
+  size: 1
+  alias: o
+permalink: "/oggetti/{{ o.slug }}/"
+sezione: Oggetti homebrew
+stampabile: true
+eleventyComputed:
+  title: "{{ o.titolo }}"
+  occhiello: "Oggetto homebrew · {{ o.rarita }}"
+  sottotitolo: "{{ o.tipo }}"
+---
+{{ o.corpo | renderMdBlock | safe }}
+
+<p class="nota-tabella"><a href="/oggetti/">← Tutti gli oggetti</a></p>

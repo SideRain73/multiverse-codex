@@ -1,0 +1,112 @@
+---
+layout: pagina.njk
+title: Incantesimi homebrew
+sezione: Incantesimi
+occhiello: Incantesimi · HB*
+sottotitolo: Cinquanta incantesimi inediti per D&D 5e, con filtri per trovarli al volo.
+scriptExtra: /assets/js/incantesimi.js
+permalink: /incantesimi/
+---
+<h2 id="trova-un-incantesimo">Trova un incantesimo</h2>
+
+<form class="filtri" data-filtri aria-label="Filtri degli incantesimi" data-pagefind-ignore>
+  <div class="filtro filtro-largo">
+    <label for="f-nome">Nome</label>
+    <input id="f-nome" type="search" placeholder="Es. Duello, Debito, Sonno…" autocomplete="off" data-f="nome">
+  </div>
+  <div class="filtro">
+    <label for="f-livello">Livello</label>
+    <select id="f-livello" data-f="livello">
+      <option value="">Tutti</option>
+      <option value="0">Trucchetti</option>
+      {% for n in [1,2,3,4,5,6,7,8,9] %}<option value="{{ n }}">{{ n }}° livello</option>{% endfor %}
+    </select>
+  </div>
+  <div class="filtro">
+    <label for="f-classe">Classe</label>
+    <select id="f-classe" data-f="classe">
+      <option value="">Tutte</option>
+      {% for c in ["Bardo","Chierico","Druido","Mago","Paladino","Ranger","Stregone","Warlock"] %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="filtro">
+    <label for="f-scuola">Scuola</label>
+    <select id="f-scuola" data-f="scuola">
+      <option value="">Tutte</option>
+      {% for c in ["Abiurazione","Ammaliamento","Divinazione","Evocazione","Illusione","Invocazione","Necromanzia","Trasmutazione"] %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="filtro">
+    <label for="f-tempo">Tempo di lancio</label>
+    <select id="f-tempo" data-f="tempo">
+      <option value="">Qualsiasi</option>
+      <option>Azione</option>
+      <option>Azione bonus</option>
+      <option>Reazione</option>
+      <option>Più di un'azione</option>
+    </select>
+  </div>
+  <div class="filtro">
+    <label for="f-gittata">Gittata</label>
+    <select id="f-gittata" data-f="gittata">
+      <option value="">Qualsiasi</option>
+      <option value="incantatore">Incantatore</option>
+      <option value="contatto">Contatto</option>
+      <option value="9">9 m o più</option>
+      <option value="18">18 m o più</option>
+      <option value="27">27 m o più</option>
+      <option value="90">90 m o più</option>
+    </select>
+  </div>
+  <fieldset class="filtro filtro-componenti">
+    <legend>Componenti</legend>
+    {% for c in [["v","Verbale (V)"],["s","Somatica (S)"],["m","Materiale (M)"]] %}
+    <label class="componente">
+      <span>{{ c[1] }}</span>
+      <select data-f="comp-{{ c[0] }}" aria-label="{{ c[1] }}">
+        <option value="">Qualsiasi</option>
+        <option value="si">Sì</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+    {% endfor %}
+  </fieldset>
+  <div class="filtro filtro-check">
+    <label><input type="checkbox" data-f="rituale"> Solo rituali</label>
+  </div>
+  <div class="filtri-fondo">
+    <p class="conteggio" data-conteggio aria-live="polite">{{ incantesimi.length }} incantesimi</p>
+    <button type="reset" class="pulsante-secondario">Azzera filtri</button>
+  </div>
+</form>
+
+<ul class="lista-incantesimi" data-lista data-pagefind-ignore>
+{% for s in incantesimi %}
+  <li class="voce-incantesimo"
+      data-nome="{{ s.nome | lower }}"
+      data-livello="{{ s.livello }}"
+      data-classi="{{ s.classiLista | join('|') }}"
+      data-scuola="{{ s.scuola }}"
+      data-tempo="{{ s.tempoCat }}"
+      data-gittata-tipo="{{ s.gittataTipo }}"
+      data-gittata-metri="{{ s.gittataMetri }}"
+      data-v="{{ 'si' if s.comp.v else 'no' }}" data-s="{{ 'si' if s.comp.s else 'no' }}" data-m="{{ 'si' if s.comp.m else 'no' }}"
+      data-rituale="{{ 'si' if s.rituale else 'no' }}">
+    <a href="/incantesimi/{{ s.slug }}/">
+      <span class="vi-testa"><span class="vi-nome">{{ s.nome }}</span><span class="vi-livello">{{ s.livelloTesto }}{% if s.rituale %} · rituale{% endif %}</span></span>
+      <span class="vi-dettagli">{{ s.scuola }} · {{ s.tempo }} · {{ s.gittata }} · {{ s.componenti | replace(r/\s*\(.*\)/, "") }}</span>
+      <span class="vi-classi">{{ s.classiLista | join(", ") }}</span>
+    </a>
+  </li>
+{% endfor %}
+</ul>
+<p class="ricerca-vuota" data-nessuno hidden>Nessun incantesimo corrisponde ai filtri.</p>
+
+<h2 id="note-di-utilizzo">Note di utilizzo</h2>
+<p>Tutti gli incantesimi di questa sezione sono <strong>homebrew</strong>: nessuno compare nei manuali ufficiali di D&amp;D 5e. Ognuno è costruito su un asse meccanico che il sistema base non copre: differimento del danno, manipolazione dell'iniziativa, trasferimento di risorse fra creature, contratti autoimposti, gravità locale, effetti che scalano sulla storia del bersaglio anziché sul livello dello slot.</p>
+<ul>
+  <li><strong>CD del tiro salvezza e bonus di attacco:</strong> si usano quelli standard della classe che lancia.</li>
+  <li><strong>Arrotondamento:</strong> ogni divisione o frazione si arrotonda all'intero più vicino (da ,0 a ,4 per difetto, da ,5 a ,9 per eccesso). Le regole di ripartizione scritte nel singolo incantesimo restano valide (es. <em>Cucitura delle Ferite</em>).</li>
+  <li><strong>Paladino dei Sogni:</strong> il Paladino non ha accesso ai trucchetti in 5e. <em>Sabbia del Torpore</em> gli viene concesso come <strong>capacità di classe</strong> (sempre preparato, lanciabile a volontà, non occupa uno slot né conta come incantesimo conosciuto). Tutti gli altri incantesimi a tema Sogni sono nella sua lista normale.</li>
+  <li><strong>Incantesimi a tema Sogni</strong> (accessibili a Chierico e Paladino): <em>Sabbia del Torpore</em> · <em>Presagio del Sonno Comune</em> · <em>Ferita Rinviata al Sonno</em> · <em>Il Duello nel Sonno</em>.</li>
+</ul>
